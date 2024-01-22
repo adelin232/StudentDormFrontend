@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "20795749884",
+    "project_id": "studentdormplatform",
+    "storage_bucket": "studentdormplatform.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20795749884:android:6d973989f908c25f4bae79",
+        "android_client_info": {
+          "package_name": "com.example.student_dorm_frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20795749884-158up4paa07qccfj7i310266tpiop95j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB70rqf0F-QSi4jEWdmKXirdNxlHQaNyHE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "20795749884-158up4paa07qccfj7i310266tpiop95j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
