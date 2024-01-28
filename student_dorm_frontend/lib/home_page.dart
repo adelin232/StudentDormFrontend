@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -13,7 +14,7 @@ class _HomePageState extends State<HomePage> {
     _navigateTo('/login');
   }
 
-  Future<void> _navigateTo(String routeName) async {
+  void _navigateTo(String routeName) {
     Navigator.pushReplacementNamed(context, routeName);
   }
 
@@ -30,6 +31,21 @@ class _HomePageState extends State<HomePage> {
             const Text(
               'Welcome to the Home Page!',
               style: TextStyle(fontSize: 24),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => _navigateTo('/profile'),
+              child: const Text('Modifică profilul'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => _navigateTo('/booking'),
+              child: const Text('Rezervă o mașină de spălat'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => _navigateTo('/complaint'),
+              child: const Text('Realizează o plângere'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(

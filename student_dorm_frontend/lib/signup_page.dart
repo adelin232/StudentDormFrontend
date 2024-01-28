@@ -14,11 +14,11 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
 
   Future<void> _signUp() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
       _navigateTo('/login');
     } catch (e) {
       print('Error during registration: $e');
@@ -89,7 +89,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     onPressed: () {
                       Navigator.pushReplacementNamed(context, '/login');
                     },
-                    child: const Text('Inapoi')),
+                    child: const Text('Înapoi')),
               )
             ],
           ),

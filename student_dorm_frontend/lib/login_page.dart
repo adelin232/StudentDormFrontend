@@ -14,15 +14,11 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
 
   Future<void> _login() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-
       _navigateTo('/home');
     } catch (e) {
       print('Error during login: $e');
@@ -55,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
             Expanded(
               child: Container(
                 margin: const EdgeInsets.all(250.0),
-                padding: const EdgeInsets.all(50.0),
+                padding: const EdgeInsets.all(75.0),
                 decoration: BoxDecoration(
                   color: const Color(0xFF6495ED),
                   borderRadius: BorderRadius.circular(10.0),

@@ -107,7 +107,7 @@ class _BookingPageState extends State<BookingPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      'Rezerva o mașină de spălat',
+                      'Rezervă o mașină de spălat',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 24.0,
@@ -191,7 +191,7 @@ class _BookingPageState extends State<BookingPage> {
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                       ),
                       child: const Text(
-                        'Rezerva',
+                        'Rezervă mașina',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -211,7 +211,7 @@ class _BookingPageState extends State<BookingPage> {
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                       ),
                       child: const Text(
-                        'Inapoi la Home Page',
+                        'Înapoi la Home Page',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
