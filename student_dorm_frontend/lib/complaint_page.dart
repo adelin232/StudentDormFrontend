@@ -70,7 +70,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
           children: [
             Expanded(
               child: Container(
-                margin: const EdgeInsets.all(220.0),
+                margin: const EdgeInsets.all(180.0),
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
                   color: const Color(0xFF6495ED),

@@ -97,7 +97,7 @@ class _BookingPageState extends State<BookingPage> {
           children: [
             Expanded(
               child: Container(
-                margin: const EdgeInsets.all(250.0),
+                margin: const EdgeInsets.all(150.0),
                 padding: const EdgeInsets.all(50.0),
                 decoration: BoxDecoration(
                   color: const Color(0xFF6495ED),

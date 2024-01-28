@@ -8,11 +8,18 @@ import 'booking_page.dart';
 import 'login_page.dart';
 import 'signup_page.dart';
 import 'home_page.dart';
-import 'firebase_options.dart';
+// import 'firebase_options.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    // options: DefaultFirebaseOptions.currentPlatform,
+    options: const FirebaseOptions(
+      apiKey: 'AIzaSyAD0ivs9-iSH13NyT4c7P-gaXBRjo24rMs',
+      appId: '1:20795749884:ios:a8c2eb3829463acd4bae79',
+      messagingSenderId: '20795749884',
+      projectId: 'studentdormplatform',
+    ),
   );
   runApp(const MyApp());
 }

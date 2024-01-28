@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Expanded(
               child: Container(
-                margin: const EdgeInsets.all(250.0),
+                margin: const EdgeInsets.all(220.0),
                 padding: const EdgeInsets.all(75.0),
                 decoration: BoxDecoration(
                   color: const Color(0xFF6495ED),
@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                     const Text(
                       'Conectare',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
                       ),
@@ -74,12 +74,12 @@ class _LoginPageState extends State<LoginPage> {
                           controller: _emailController,
                           decoration: const InputDecoration(
                             labelText: 'E-mail',
-                            labelStyle: TextStyle(color: Colors.white),
+                            labelStyle: TextStyle(color: Colors.black),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                              borderSide: BorderSide(color: Colors.black),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                              borderSide: BorderSide(color: Colors.black),
                             ),
                           ),
                           autocorrect: false,
@@ -91,12 +91,12 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _passwordController,
                         decoration: const InputDecoration(
                           labelText: 'Parola',
-                          labelStyle: TextStyle(color: Colors.white),
+                          labelStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
+                            borderSide: BorderSide(color: Colors.black),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
+                            borderSide: BorderSide(color: Colors.black),
                           ),
                         ),
                         obscureText: true,
@@ -110,8 +110,8 @@ class _LoginPageState extends State<LoginPage> {
                         _login();
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: const Color(0xFFFFDE59),
-                        onPrimary: Colors.black,
+                        foregroundColor: Colors.black,
+                        backgroundColor: const Color(0xFFB6D0E2),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),

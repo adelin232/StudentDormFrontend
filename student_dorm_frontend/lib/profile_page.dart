@@ -14,7 +14,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _roomController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
 
   Future<void> _navigateTo(String routeName) async {
     Navigator.pushReplacementNamed(context, routeName);
@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Expanded(
               child: Container(
-                margin: const EdgeInsets.all(220.0),
+                margin: const EdgeInsets.all(180.0),
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
                   color: const Color(0xFF6495ED),
@@ -66,28 +66,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 20.0),
                     TextFormField(
-                      controller: _emailController,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        labelStyle: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vă rugăm să introduceți emailul';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20.0),
-                    TextFormField(
                       controller: _roomController,
                       decoration: const InputDecoration(
                         labelText: 'Camera',
@@ -104,6 +82,28 @@ class _ProfilePageState extends State<ProfilePage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Vă rugăm să introduceți camera';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20.0),
+                    TextFormField(
+                      controller: _phoneController,
+                      decoration: const InputDecoration(
+                        labelText: 'Telefon',
+                        labelStyle: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Vă rugăm să introduceți numărul de telefon';
                         }
                         return null;
                       },
@@ -173,8 +173,8 @@ class _ProfilePageState extends State<ProfilePage> {
         body: jsonEncode({
           'userId': user.uid,
           'name': _nameController.text,
-          'email': _emailController.text,
           'room': _roomController.text,
+          'phone': _phoneController.text,
         }),
       );
 
