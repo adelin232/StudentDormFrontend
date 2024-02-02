@@ -21,7 +21,7 @@ class _SignUpPageState extends State<SignUpPage> {
       );
       _navigateTo('/login');
     } catch (e) {
-      print('Error during registration: $e');
+      showErrorSnackBar('Eroare la înregistrare: $e');
     }
   }
 
@@ -39,62 +39,117 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double widthFactor = screenSize.width > 600 ? 1.2 : 1;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign up'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Adresa email'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Adresa email';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Parola'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Parola';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _signUp();
-                    }
-                  },
-                  child: const Text('Inregistrare'),
+      backgroundColor: const Color(0xFFF0FFFF),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: FractionallySizedBox(
+                    widthFactor: widthFactor,
+                    child: Container(
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF6495ED),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            'Înregistrare',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 20.0),
+                          buildTextField(
+                              _emailController, 'E-mail', AutofillHints.email),
+                          const SizedBox(height: 20.0),
+                          buildTextField(_passwordController, 'Parola',
+                              AutofillHints.password,
+                              obscureText: true),
+                          const SizedBox(height: 20.0),
+                          ElevatedButton(
+                            onPressed: _signUp,
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.black,
+                              backgroundColor: const Color(0xFFB6D0E2),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                            ),
+                            child: const Text(
+                              'Înregistrare',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20.0),
+                          ElevatedButton(
+                            onPressed: () => _navigateTo('/login'),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.black,
+                              backgroundColor: const Color(0xFFB6D0E2),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                            ),
+                            child: const Text(
+                              'Aveți deja un cont? Conectați-vă',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/login');
-                    },
-                    child: const Text('Înapoi')),
-              )
-            ],
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildTextField(
+      TextEditingController controller, String label, String autofillHint,
+      {bool obscureText = false}) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.black),
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black),
+        ),
+      ),
+      obscureText: obscureText,
+      autocorrect: false,
+      autofillHints: [autofillHint],
     );
   }
 }

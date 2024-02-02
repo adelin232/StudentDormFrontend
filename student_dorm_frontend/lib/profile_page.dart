@@ -20,150 +20,11 @@ class _ProfilePageState extends State<ProfilePage> {
     Navigator.pushReplacementNamed(context, routeName);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0FFFF),
-      appBar: AppBar(
-        title: const Text('Profil student'),
-      ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.all(180.0),
-                padding: const EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF6495ED),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Nume',
-                        labelStyle: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vă rugăm să introduceți numele';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20.0),
-                    TextFormField(
-                      controller: _roomController,
-                      decoration: const InputDecoration(
-                        labelText: 'Camera',
-                        labelStyle: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vă rugăm să introduceți camera';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20.0),
-                    TextFormField(
-                      controller: _phoneController,
-                      decoration: const InputDecoration(
-                        labelText: 'Telefon',
-                        labelStyle: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vă rugăm să introduceți numărul de telefon';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _createStudentProfile();
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: const Color(0xFFB6D0E2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      ),
-                      child: const Text(
-                        'Salvează profil',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        _navigateTo('/home');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: const Color(0xFFB6D0E2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      ),
-                      child: const Text(
-                        'Înapoi la Home Page',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Future<void> _createStudentProfile() async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
+      var email = user.email;
       final response = await http.put(
         Uri.parse('http://localhost:8080/api/students/create'),
         headers: {
@@ -175,14 +36,119 @@ class _ProfilePageState extends State<ProfilePage> {
           'name': _nameController.text,
           'room': _roomController.text,
           'phone': _phoneController.text,
+          'email': email,
         }),
       );
 
       if (response.statusCode == 200) {
-        // Profilul a fost creat cu succes
+        _navigateTo('/home');
       } else {
         // Tratează erorile
       }
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double widthFactor =
+        screenSize.width > 800 ? 0.5 : (screenSize.width > 600 ? 0.75 : 0.95);
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF0FFFF),
+      appBar: AppBar(
+        title: const Text('Profil student'),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Modificare profil',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20.0),
+                    buildTextField(_nameController, 'Nume'),
+                    const SizedBox(height: 20.0),
+                    buildTextField(_roomController, 'Cameră'),
+                    const SizedBox(height: 20.0),
+                    buildTextField(_phoneController, 'Telefon'),
+                    const SizedBox(height: 20.0),
+                    FractionallySizedBox(
+                      widthFactor: widthFactor,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _createStudentProfile();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor: const Color(0xFFB6D0E2),
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        ),
+                        child: const Text(
+                          'Salvează profil',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    FractionallySizedBox(
+                      widthFactor: widthFactor,
+                      child: ElevatedButton(
+                        onPressed: () => _navigateTo('/home'),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor: const Color(0xFFB6D0E2),
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        ),
+                        child: const Text(
+                          'Înapoi la Home Page',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextField(TextEditingController controller, String label) {
+    return FractionallySizedBox(
+      widthFactor: 0.8,
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle:
+              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          border: const OutlineInputBorder(),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Vă rugăm să introduceți $label';
+          }
+          return null;
+        },
+      ),
+    );
   }
 }

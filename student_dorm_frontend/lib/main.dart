@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'admin_page.dart';
 import 'profile_page.dart';
 import 'complaint_page.dart';
 import 'my_bookings_page.dart';
@@ -19,6 +22,7 @@ Future<void> main() async {
       appId: '1:20795749884:ios:a8c2eb3829463acd4bae79',
       messagingSenderId: '20795749884',
       projectId: 'studentdormplatform',
+      databaseURL: '',
     ),
   );
   runApp(const MyApp());
@@ -43,6 +47,55 @@ class AuthGuard extends StatelessWidget {
     } else {
       return const LoginPage();
     }
+  }
+}
+
+class AdminPageProtection extends StatelessWidget {
+  final Widget child;
+
+  const AdminPageProtection({Key? key, required this.child}) : super(key: key);
+
+  Future<bool> isAdmin() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return false;
+
+    final token = await user.getIdToken();
+    final userId = user.uid;
+    final uri = Uri.parse('http://localhost:8080/admin/check-admin')
+        .replace(queryParameters: {'userId': userId});
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    return response.statusCode == 200;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: isAdmin(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData && snapshot.data!) {
+            return child;
+          } else {
+            Future.microtask(
+                () => Navigator.of(context).pushReplacementNamed('/home'));
+            return const Scaffold(
+              body: Center(
+                child: Text(
+                    'Acces interzis. Redirecționare către pagina principală...'),
+              ),
+            );
+          }
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    );
   }
 }
 
@@ -74,6 +127,10 @@ class _MyAppState extends State<MyApp> {
               const AuthGuard(protectedPage: MyBookingsPage()),
           '/complaint': (_) => const AuthGuard(protectedPage: ComplaintPage()),
           '/profile': (_) => const AuthGuard(protectedPage: ProfilePage()),
+          '/admin': (_) => const AuthGuard(
+                  protectedPage: AdminPageProtection(
+                child: AdminPage(),
+              )),
         },
         initialRoute: '/login',
         home: const LoginPage());

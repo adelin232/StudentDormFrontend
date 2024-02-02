@@ -58,29 +58,28 @@ class _ComplaintPageState extends State<ComplaintPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double widthFactor =
+        screenSize.width > 800 ? 0.5 : (screenSize.width > 600 ? 0.75 : 0.95);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF0FFFF),
       appBar: AppBar(
         title: const Text('Trimitere plângere'),
       ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.all(180.0),
-                padding: const EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF6495ED),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Form(
+                key: _formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const Text(
-                      'Detalii plângere',
+                      'Plângere',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 24.0,
@@ -89,73 +88,39 @@ class _ComplaintPageState extends State<ComplaintPage> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20.0),
-                    TextFormField(
-                      controller: _subjectController,
-                      decoration: const InputDecoration(
-                        labelText: 'Subiect',
-                        labelStyle: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vă rugăm să introduceți un subiect';
-                        }
-                        return null;
-                      },
-                    ),
+                    buildTextField(_subjectController, 'Subiect'),
                     const SizedBox(height: 20.0),
-                    TextFormField(
-                      controller: _descriptionController,
-                      decoration: const InputDecoration(
-                        labelText: 'Descriere',
-                        labelStyle: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Vă rugăm să introduceți un subiect';
-                        }
-                        return null;
-                      },
-                      maxLines: 3,
-                    ),
+                    buildTextField(_descriptionController, 'Descriere',
+                        maxLines: 3),
                     const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: _submitComplaint,
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: const Color(0xFFB6D0E2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
+                    FractionallySizedBox(
+                      widthFactor: widthFactor,
+                      child: ElevatedButton(
+                        onPressed: _submitComplaint,
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor: const Color(0xFFB6D0E2),
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      ),
-                      child: const Text(
-                        'Trimite',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        child: const Text(
+                          'Trimite',
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                     const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        _navigateTo('/home');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: const Color(0xFFB6D0E2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
+                    FractionallySizedBox(
+                      widthFactor: widthFactor,
+                      child: ElevatedButton(
+                        onPressed: () => _navigateTo('/home'),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor: const Color(0xFFB6D0E2),
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      ),
-                      child: const Text(
-                        'Înapoi la Home Page',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        child: const Text(
+                          'Înapoi la Home Page',
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -163,8 +128,31 @@ class _ComplaintPageState extends State<ComplaintPage> {
                 ),
               ),
             ),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget buildTextField(TextEditingController controller, String label,
+      {int maxLines = 1}) {
+    return FractionallySizedBox(
+      widthFactor: 0.8,
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle:
+              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          border: const OutlineInputBorder(),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Vă rugăm să introduceți $label';
+          }
+          return null;
+        },
+        maxLines: maxLines,
       ),
     );
   }

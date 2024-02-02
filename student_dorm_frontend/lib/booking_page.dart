@@ -83,147 +83,116 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double widthFactor =
+        screenSize.width > 800 ? 0.5 : (screenSize.width > 600 ? 0.75 : 0.95);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF0FFFF),
       appBar: AppBar(
         title: const Text('Rezervări pentru mașinile de spălat'),
       ),
-      body: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: MediaQuery.of(context).size.height,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.all(150.0),
-                padding: const EdgeInsets.all(50.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF6495ED),
-                  borderRadius: BorderRadius.circular(10.0),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text(
+                  'Rezervă o mașină de spălat',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      'Rezervă o mașină de spălat',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 20.0),
-                    SizedBox(
-                      child: InputDecorator(
+                const SizedBox(height: 20.0),
+                FractionallySizedBox(
+                  widthFactor: widthFactor,
+                  child: buildDropdownButton(),
+                ),
+                const SizedBox(height: 20.0),
+                FractionallySizedBox(
+                  widthFactor: widthFactor,
+                  child: GestureDetector(
+                    onTap: () => _selectTime(context),
+                    child: AbsorbPointer(
+                      child: TextField(
+                        controller: TextEditingController(
+                            text: selectedTime.format(context)),
                         decoration: const InputDecoration(
-                          labelText: 'Număr mașină',
+                          labelText: 'Oră începere rezervare',
                           labelStyle: TextStyle(
                               color: Colors.black, fontWeight: FontWeight.bold),
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 10.0),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: selectedMachine,
-                            isExpanded: true,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedMachine = newValue!;
-                                _wmNoController.text = newValue;
-                              });
-                            },
-                            items: machines
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            style: const TextStyle(color: Colors.black),
-                          ),
+                          border: OutlineInputBorder(),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20.0),
-                    SizedBox(
-                      child: GestureDetector(
-                        onTap: () => _selectTime(context),
-                        child: AbsorbPointer(
-                          child: TextField(
-                            controller: TextEditingController(
-                                text: selectedTime.format(context)),
-                            decoration: const InputDecoration(
-                              labelText: 'Oră începere rezervare',
-                              labelStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        _book();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: const Color(0xFFB6D0E2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      ),
-                      child: const Text(
-                        'Rezervă mașina',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        _navigateTo('/home');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: const Color(0xFFB6D0E2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      ),
-                      child: const Text(
-                        'Înapoi la Home Page',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: 20.0),
+                FractionallySizedBox(
+                  widthFactor: widthFactor,
+                  child: ElevatedButton(
+                    onPressed: _book,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: const Color(0xFFB6D0E2),
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    ),
+                    child: const Text(
+                      'Rezervă mașina',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                FractionallySizedBox(
+                  widthFactor: widthFactor,
+                  child: ElevatedButton(
+                    onPressed: () => _navigateTo('/home'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: const Color(0xFFB6D0E2),
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    ),
+                    child: const Text(
+                      'Înapoi la Home Page',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget buildDropdownButton() {
+    return DropdownButtonFormField<String>(
+      value: selectedMachine,
+      decoration: const InputDecoration(
+        labelText: 'Număr mașină',
+        labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        border: OutlineInputBorder(),
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          selectedMachine = newValue!;
+          _wmNoController.text = newValue;
+        });
+      },
+      items: machines.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 }
