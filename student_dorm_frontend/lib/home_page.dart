@@ -29,28 +29,91 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'Welcome to the Home Page!',
-              style: TextStyle(fontSize: 24),
+              'Bun venit pe StudentDormSystem!',
+              style: TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _navigateTo('/profile'),
-              child: const Text('Modifică profilul'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: const Color(0xFFB6D0E2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 20.0, horizontal: 15.0),
+              ),
+              child: const Text(
+                'Modifică profilul',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _navigateTo('/booking'),
-              child: const Text('Rezervă o mașină de spălat'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: const Color(0xFFB6D0E2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 20.0, horizontal: 15.0),
+              ),
+              child: const Text(
+                'Rezervă o mașină de spălat',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _navigateTo('/complaint'),
-              child: const Text('Realizează o plângere'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: const Color(0xFFB6D0E2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 20.0, horizontal: 15.0),
+              ),
+              child: const Text(
+                'Realizează o plângere',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _logout(context),
-              child: const Text('Logout'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: const Color(0xFFB6D0E2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 20.0, horizontal: 15.0),
+              ),
+              child: const Text(
+                'Logout',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),
