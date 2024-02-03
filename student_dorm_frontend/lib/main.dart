@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
+import 'chat_page.dart';
 import 'dart:convert';
 import 'admin_page.dart';
 import 'profile_page.dart';
@@ -131,6 +132,7 @@ class _MyAppState extends State<MyApp> {
                   protectedPage: AdminPageProtection(
                 child: AdminPage(),
               )),
+          // '/chat': (_) => const ChatPage(),
         },
         initialRoute: '/login',
         home: const LoginPage());
