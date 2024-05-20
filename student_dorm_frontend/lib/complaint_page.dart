@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:student_dorm_frontend/utils.dart';
 
 class ComplaintPage extends StatefulWidget {
   const ComplaintPage({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
         return;
       }
 
-      var url = Uri.parse('http://localhost:8080/api/complaints/create');
+      var url = Uri.http(getBackendUrl(), '/api/complaints/create');
       var response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},

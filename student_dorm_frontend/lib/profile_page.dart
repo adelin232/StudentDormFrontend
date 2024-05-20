@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:student_dorm_frontend/utils.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -26,7 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (user != null) {
       var email = user.email;
       final response = await http.put(
-        Uri.parse('http://localhost:8080/api/students/create'),
+        Uri.http(getBackendUrl(), '/api/students/create'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer ${await user.getIdToken()}",

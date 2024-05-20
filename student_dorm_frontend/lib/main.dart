@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
-import 'chat_page.dart';
-import 'dart:convert';
+import 'package:student_dorm_frontend/utils.dart';
+// import 'chat_page.dart';
+// import 'dart:convert';
 import 'admin_page.dart';
 import 'profile_page.dart';
 import 'complaint_page.dart';
@@ -62,8 +63,9 @@ class AdminPageProtection extends StatelessWidget {
 
     final token = await user.getIdToken();
     final userId = user.uid;
-    final uri = Uri.parse('http://localhost:8080/admin/check-admin')
-        .replace(queryParameters: {'userId': userId});
+    // final uri = Uri.parse('${getBackendUrl()}/admin/check-admin')
+    //     .replace(queryParameters: {'userId': userId});
+    final uri = Uri.http(getBackendUrl(), '/admin/check-admin', {'userId': userId});
     final response = await http.get(
       uri,
       headers: {

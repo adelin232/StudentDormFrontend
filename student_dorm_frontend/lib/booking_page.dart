@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:flutter/foundation.dart';
 
 class BookingPage extends StatefulWidget {
   const BookingPage({Key? key}) : super(key: key);
@@ -31,7 +32,16 @@ class _BookingPageState extends State<BookingPage> {
       return;
     }
 
-    var url = Uri.parse('http://localhost:8080/api/bookings/create');
+    String getBackendUrl() {
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        return '192.168.100.118:8080';
+      } else {
+        return 'localhost:8080';
+      }
+    }
+
+    // var url = Uri.parse('${getBackendUrl()}/api/bookings/create');
+    var url = Uri.http(getBackendUrl(), '/api/bookings/create');
     var response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},

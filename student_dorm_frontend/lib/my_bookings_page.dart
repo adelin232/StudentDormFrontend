@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:student_dorm_frontend/utils.dart';
 
 class MyBookingsPage extends StatefulWidget {
   const MyBookingsPage({Key? key}) : super(key: key);
@@ -37,8 +38,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
       return;
     }
 
-    final userId = user.uid;
-    final url = Uri.parse('http://localhost:8080/api/bookings?userId=$userId');
+    final url = Uri.http(getBackendUrl(), '/api/bookings', {'userId': user.uid});
 
     try {
       final response = await http.get(

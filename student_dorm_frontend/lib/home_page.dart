@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+import 'package:student_dorm_frontend/utils.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,6 +11,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _isAdmin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfAdmin();
+  }
+
+  Future<bool> checkIfUserIsAdmin(String uid) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return false;
+
+    final token = await user.getIdToken();
+    final userId = uid;
+    final uri = Uri.http(getBackendUrl(), '/admin/check-admin', {'userId': userId});
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    return response.statusCode == 200;
+  }
+
+  void _checkIfAdmin() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      bool isAdmin = await checkIfUserIsAdmin(user.uid);
+      setState(() {
+        _isAdmin = isAdmin;
+      });
+    }
+  }
+
   void _logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     _navigateTo('/login');
@@ -35,6 +72,27 @@ class _HomePageState extends State<HomePage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 20),
+            if (_isAdmin)
+              ElevatedButton(
+                onPressed: () => _navigateTo('/admin'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: const Color(0xFFB6D0E2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 20.0, horizontal: 15.0),
+                ),
+                child: const Text(
+                  'Pagina de administrare',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _navigateTo('/profile'),

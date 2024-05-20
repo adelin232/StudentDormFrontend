@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:student_dorm_frontend/utils.dart';
 
 class User {
   final String id;
@@ -69,7 +70,7 @@ class _AdminPageState extends State<AdminPage> {
 
   Future<List<User>> fetchUsers() async {
     final response =
-        await http.get(Uri.parse('http://localhost:8080/api/students'));
+        await http.get(Uri.http(getBackendUrl(), '/api/students'));
 
     if (response.statusCode == 200) {
       List<dynamic> usersJson = json.decode(response.body);
@@ -80,8 +81,7 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   Future<List<Complaint>> fetchComplaints() async {
-    final response =
-        await http.get(Uri.parse('http://localhost:8080/api/complaints'));
+    final response = await http.get(Uri.http(getBackendUrl(), '/api/complaints'));
 
     if (response.statusCode == 200) {
       List<dynamic> complaintsJson = json.decode(response.body);

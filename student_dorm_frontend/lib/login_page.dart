@@ -12,6 +12,28 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginState();
+  }
+
+  void _checkLoginState() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      Future.microtask(() => _navigateTo('/home'));
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   Future<void> _login() async {
     try {
@@ -81,10 +103,13 @@ class _LoginPageState extends State<LoginPage> {
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 20.0),
-                          buildTextField(
-                              _emailController, 'E-mail', AutofillHints.email),
+                          buildTextField(_emailController, _emailFocusNode,
+                              'E-mail', AutofillHints.email),
                           const SizedBox(height: 20.0),
-                          buildTextField(_passwordController, 'Parola',
+                          buildTextField(
+                              _passwordController,
+                              _passwordFocusNode,
+                              'Parola',
                               AutofillHints.password,
                               obscureText: true),
                           const SizedBox(height: 20.0),
@@ -119,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                                   const EdgeInsets.symmetric(vertical: 15.0),
                             ),
                             child: const Text(
-                              'Înregistrare',
+                              'Nu aveți un cont? Înregistrați-vă',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -138,11 +163,14 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget buildTextField(
-      TextEditingController controller, String label, String autofillHint,
+  Widget buildTextField(TextEditingController controller, FocusNode focusNode,
+      String label, String autofillHint,
       {bool obscureText = false}) {
-    return TextField(
+    return TextFormField(
       controller: controller,
+      focusNode: focusNode,
+      textInputAction:
+          (label == 'E-mail') ? TextInputAction.next : TextInputAction.done,
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Colors.black),
@@ -153,6 +181,11 @@ class _LoginPageState extends State<LoginPage> {
           borderSide: BorderSide(color: Color.fromARGB(255, 54, 54, 54)),
         ),
       ),
+      onFieldSubmitted: (_) {
+        (label == 'E-mail')
+            ? FocusScope.of(context).requestFocus(_passwordFocusNode)
+            : _login();
+      },
       obscureText: obscureText,
       autocorrect: false,
       autofillHints: [autofillHint],
