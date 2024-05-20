@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:intl/intl.dart';
-import 'package:flutter/foundation.dart';
+import 'package:student_dorm_frontend/utils.dart';
 
 class BookingPage extends StatefulWidget {
   const BookingPage({Key? key}) : super(key: key);
@@ -15,32 +14,47 @@ class BookingPage extends StatefulWidget {
 class _BookingPageState extends State<BookingPage> {
   final _formKey = GlobalKey<FormState>();
   final _wmNoController = TextEditingController();
-  final _startHourController = TextEditingController();
   String selectedMachine = '1';
   List<String> machines = ['1', '2', '3'];
-  TimeOfDay selectedTime = TimeOfDay.now();
+  List<Map<String, dynamic>> availableHours = [];
+  String selectedHour = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAvailableHours();
+  }
+
+  Future<void> fetchAvailableHours() async {
+    try {
+      var url = Uri.http(getBackendUrl(), '/api/bookings/available-hours',
+          {'wmNo': selectedMachine});
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        setState(() {
+          availableHours =
+              List<Map<String, dynamic>>.from(json.decode(response.body));
+        });
+      } else {
+        showErrorSnackBar('Eroare la preluarea orelor: ${response.body}');
+      }
+    } catch (e) {
+      showErrorSnackBar('Eroare la preluarea orelor: $e');
+    }
+  }
 
   Future<void> _book() async {
     final numarMasina =
         (_wmNoController.text.trim() == '') ? '1' : _wmNoController.text.trim();
-    final oraIncepere = (_startHourController.text.trim() == '')
-        ? _formatTimeOfDay(TimeOfDay.now())
-        : _startHourController.text.trim();
+    final oraIncepere = selectedHour;
     final String? userId = FirebaseAuth.instance.currentUser?.uid;
+
     if (userId == null) {
       showErrorSnackBar('Utilizatorul nu este logat.');
       return;
     }
 
-    String getBackendUrl() {
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        return '192.168.100.118:8080';
-      } else {
-        return 'localhost:8080';
-      }
-    }
-
-    // var url = Uri.parse('${getBackendUrl()}/api/bookings/create');
     var url = Uri.http(getBackendUrl(), '/api/bookings/create');
     var response = await http.post(
       url,
@@ -55,7 +69,8 @@ class _BookingPageState extends State<BookingPage> {
     if (response.statusCode == 200) {
       _navigateTo('/home');
     } else {
-      showErrorSnackBar('Eroare la rezervare: ${response.body}');
+      // showErrorSnackBar('Eroare la rezervare: ${response.body}');
+      showErrorSnackBar('Eroare la rezervare: Aveți deja o rezervare.');
     }
   }
 
@@ -69,26 +84,6 @@ class _BookingPageState extends State<BookingPage> {
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-    );
-    if (picked != null && picked != selectedTime) {
-      setState(() {
-        selectedTime = picked;
-        _startHourController.text = _formatTimeOfDay(picked);
-      });
-    }
-  }
-
-  String _formatTimeOfDay(TimeOfDay tod) {
-    final now = DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
-    final format = DateFormat("HH:mm");
-    return format.format(dt);
   }
 
   @override
@@ -125,24 +120,7 @@ class _BookingPageState extends State<BookingPage> {
                   child: buildDropdownButton(),
                 ),
                 const SizedBox(height: 20.0),
-                FractionallySizedBox(
-                  widthFactor: widthFactor,
-                  child: GestureDetector(
-                    onTap: () => _selectTime(context),
-                    child: AbsorbPointer(
-                      child: TextField(
-                        controller: TextEditingController(
-                            text: selectedTime.format(context)),
-                        decoration: const InputDecoration(
-                          labelText: 'Oră începere rezervare',
-                          labelStyle: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.bold),
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                buildAvailableHours(),
                 const SizedBox(height: 20.0),
                 FractionallySizedBox(
                   widthFactor: widthFactor,
@@ -195,6 +173,7 @@ class _BookingPageState extends State<BookingPage> {
         setState(() {
           selectedMachine = newValue!;
           _wmNoController.text = newValue;
+          fetchAvailableHours();
         });
       },
       items: machines.map<DropdownMenuItem<String>>((String value) {
@@ -203,6 +182,72 @@ class _BookingPageState extends State<BookingPage> {
           child: Text(value),
         );
       }).toList(),
+    );
+  }
+
+  Widget buildAvailableHours() {
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Ora începere rezervare',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: availableHours.map<Widget>((hour) {
+                String time = hour['time'];
+                bool reserved = hour['reserved'];
+                String tooltipMessage = '';
+                if (reserved) {
+                  tooltipMessage =
+                      'Rezervat de: ${hour['userName']}, Telefon: ${hour['userPhone']}';
+                }
+                return Tooltip(
+                  message: tooltipMessage,
+                  child: ElevatedButton(
+                    onPressed: reserved
+                        ? null
+                        : () {
+                            setState(() {
+                              selectedHour = time;
+                            });
+                          },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: reserved
+                          ? Colors.red
+                          : (selectedHour == time ? Colors.blue : Colors.green),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 15.0),
+                    ),
+                    child: Text(
+                      time,
+                      style: const TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
