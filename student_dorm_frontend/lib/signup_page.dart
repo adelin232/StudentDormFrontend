@@ -73,7 +73,7 @@ class _SignUpPageState extends State<SignUpPage> {
         }),
       );
 
-      if (response.statusCode != 200) {
+      if (response.statusCode != 201) {
         showErrorSnackBar('Eroare la crearea profilului: ${response.body}');
       }
     }
