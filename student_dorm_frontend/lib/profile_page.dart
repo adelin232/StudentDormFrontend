@@ -80,7 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _isLoading = false;
       });
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         _navigateTo('/home');
       } else {
         showErrorSnackBar('Eroare la salvarea profilului: ${response.body}');
