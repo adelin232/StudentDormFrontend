@@ -25,7 +25,8 @@ class _HomePageState extends State<HomePage> {
 
     final token = await user.getIdToken();
     final userId = uid;
-    final uri = Uri.http(getBackendUrl(), '/admin/check-admin', {'userId': userId});
+    final uri =
+        Uri.http(getBackendUrl(), '/admin/check-admin', {'userId': userId});
     final response = await http.get(
       uri,
       headers: {
@@ -40,9 +41,11 @@ class _HomePageState extends State<HomePage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       bool isAdmin = await checkIfUserIsAdmin(user.uid);
-      setState(() {
-        _isAdmin = isAdmin;
-      });
+      if (mounted) {
+        setState(() {
+          _isAdmin = isAdmin;
+        });
+      }
     }
   }
 
@@ -59,7 +62,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        automaticallyImplyLeading: false,
+        title: const Text('Homepage'),
       ),
       body: Center(
         child: Column(
@@ -71,6 +75,7 @@ class _HomePageState extends State<HomePage> {
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             if (_isAdmin)

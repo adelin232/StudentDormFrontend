@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:student_dorm_frontend/utils.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -9,9 +12,11 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _roomController = TextEditingController();
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
 
@@ -37,13 +42,40 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> _signUp() async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+
+      await _createStudentProfile(userCredential.user);
       _navigateTo('/login');
     } catch (e) {
       showErrorSnackBar('Eroare la înregistrare: $e');
+    }
+  }
+
+  Future<void> _createStudentProfile(User? user) async {
+    if (user != null) {
+      var email = user.email;
+      final response = await http.put(
+        Uri.http(getBackendUrl(), '/api/students/create'),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${await user.getIdToken()}",
+        },
+        body: jsonEncode({
+          'userId': user.uid,
+          'name': _nameController.text,
+          'room': _roomController.text,
+          'phone': _phoneController.text,
+          'email': email,
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        showErrorSnackBar('Eroare la crearea profilului: ${response.body}');
+      }
     }
   }
 
@@ -66,16 +98,20 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF0FFFF),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Înregistrare'),
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 500),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: FractionallySizedBox(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FractionallySizedBox(
                     widthFactor: widthFactor,
                     child: Container(
                       padding: const EdgeInsets.all(20.0),
@@ -104,8 +140,17 @@ class _SignUpPageState extends State<SignUpPage> {
                               _passwordController,
                               _passwordFocusNode,
                               'Parola',
-                              AutofillHints.password,
+                              AutofillHints.newPassword,
                               obscureText: true),
+                          const SizedBox(height: 20.0),
+                          buildTextField(_nameController, FocusNode(), 'Nume',
+                              AutofillHints.name),
+                          const SizedBox(height: 20.0),
+                          buildTextField(_phoneController, FocusNode(),
+                              'Telefon', AutofillHints.telephoneNumber),
+                          const SizedBox(height: 20.0),
+                          buildTextField(_roomController, FocusNode(), 'Cameră',
+                              AutofillHints.addressCity),
                           const SizedBox(height: 20.0),
                           ElevatedButton(
                             onPressed: _signUp,
@@ -148,8 +193,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

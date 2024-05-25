@@ -9,7 +9,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _emailFocusNode = FocusNode();
@@ -41,7 +40,10 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      _navigateTo('/home');
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        _navigateTo('/home');
+      }
     } catch (e) {
       showErrorSnackBar('Error during login: $e');
     }
@@ -70,6 +72,10 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF0FFFF),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Conectare'),
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(

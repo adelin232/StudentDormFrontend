@@ -12,7 +12,6 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
-  final _formKey = GlobalKey<FormState>();
   final _wmNoController = TextEditingController();
   String selectedMachine = '1';
   List<String> machines = ['1', '2', '3'];
@@ -70,7 +69,7 @@ class _BookingPageState extends State<BookingPage> {
       _navigateTo('/home');
     } else {
       // showErrorSnackBar('Eroare la rezervare: ${response.body}');
-      showErrorSnackBar('Eroare la rezervare: Aveți deja o rezervare.');
+      showErrorSnackBar('Eroare: Aveți deja o rezervare la această mașină.');
     }
   }
 
@@ -97,63 +96,65 @@ class _BookingPageState extends State<BookingPage> {
       appBar: AppBar(
         title: const Text('Rezervări pentru mașinile de spălat'),
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Text(
-                  'Rezervă o mașină de spălat',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Rezervă o mașină de spălat',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20.0),
-                FractionallySizedBox(
-                  widthFactor: widthFactor,
-                  child: buildDropdownButton(),
-                ),
-                const SizedBox(height: 20.0),
-                buildAvailableHours(),
-                const SizedBox(height: 20.0),
-                FractionallySizedBox(
-                  widthFactor: widthFactor,
-                  child: ElevatedButton(
-                    onPressed: _book,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: const Color(0xFFB6D0E2),
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    ),
-                    child: const Text(
-                      'Rezervă mașina',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                  const SizedBox(height: 20.0),
+                  FractionallySizedBox(
+                    widthFactor: widthFactor,
+                    child: buildDropdownButton(),
                   ),
-                ),
-                const SizedBox(height: 20.0),
-                FractionallySizedBox(
-                  widthFactor: widthFactor,
-                  child: ElevatedButton(
-                    onPressed: () => _navigateTo('/home'),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: const Color(0xFFB6D0E2),
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
-                    ),
-                    child: const Text(
-                      'Înapoi la Home Page',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                  const SizedBox(height: 20.0),
+                  buildAvailableHours(),
+                  const SizedBox(height: 20.0),
+                  FractionallySizedBox(
+                    widthFactor: widthFactor,
+                    child: ElevatedButton(
+                      onPressed: _book,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.black,
+                        backgroundColor: const Color(0xFFB6D0E2),
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      ),
+                      child: const Text(
+                        'Rezervă mașina',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 20.0),
+                  FractionallySizedBox(
+                    widthFactor: widthFactor,
+                    child: ElevatedButton(
+                      onPressed: () => _navigateTo('/home'),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.black,
+                        backgroundColor: const Color(0xFFB6D0E2),
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      ),
+                      child: const Text(
+                        'Înapoi la Home Page',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -185,6 +186,26 @@ class _BookingPageState extends State<BookingPage> {
     );
   }
 
+  void _showReservationInfo(String name, String phone) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Rezervare făcută de:'),
+          content: Text('Nume: $name\nTelefon: $phone'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget buildAvailableHours() {
     return Card(
       elevation: 2,
@@ -192,57 +213,92 @@ class _BookingPageState extends State<BookingPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Ora începere rezervare',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+            if (availableHours.isNotEmpty) ...[
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Ora începere rezervare',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
+            ],
+            if (availableHours.isEmpty) ...[
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Nu se mai pot rezerva mașini de spălat la această oră.',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
             Wrap(
               spacing: 8.0,
               runSpacing: 8.0,
               children: availableHours.map<Widget>((hour) {
                 String time = hour['time'];
                 bool reserved = hour['reserved'];
-                String tooltipMessage = '';
-                if (reserved) {
-                  tooltipMessage =
-                      'Rezervat de: ${hour['userName']}, Telefon: ${hour['userPhone']}';
-                }
-                return Tooltip(
-                  message: tooltipMessage,
-                  child: ElevatedButton(
-                    onPressed: reserved
-                        ? null
-                        : () {
-                            setState(() {
-                              selectedHour = time;
-                            });
-                          },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: reserved
+                return GestureDetector(
+                  onTap: reserved
+                      ? () => _showReservationInfo(
+                          hour['userName'], hour['userPhone'])
+                      : () {
+                          setState(() {
+                            selectedHour = time;
+                          });
+                        },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: reserved
                           ? Colors.red
                           : (selectedHour == time ? Colors.blue : Colors.green),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 15.0),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    child: Text(
-                      time,
-                      style: const TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Text(
+                        time,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ),
                   ),
                 );
+                // return Tooltip(
+                //   message: tooltipMessage,
+                //   child: ElevatedButton(
+                //     onPressed: reserved
+                //         ? null
+                //         : () {
+                //             setState(() {
+                //               selectedHour = time;
+                //             });
+                //           },
+                //     style: ElevatedButton.styleFrom(
+                //       foregroundColor: Colors.white,
+                //       backgroundColor: reserved
+                //           ? Colors.red
+                //           : (selectedHour == time ? Colors.blue : Colors.green),
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(10.0),
+                //       ),
+                //       padding: const EdgeInsets.symmetric(
+                //           vertical: 10.0, horizontal: 15.0),
+                //     ),
+                //     child: Text(
+                //       time,
+                //       style: const TextStyle(
+                //         fontSize: 14.0,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     ),
+                //   ),
+                // );
               }).toList(),
             ),
           ],

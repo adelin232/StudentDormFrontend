@@ -2,56 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:student_dorm_frontend/utils.dart';
-
-class User {
-  final String id;
-  final String userId;
-  final String name;
-  final String room;
-  final String phone;
-  final String email;
-
-  User(
-      {required this.id,
-      required this.userId,
-      required this.name,
-      required this.room,
-      required this.phone,
-      required this.email});
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'].toString(),
-      userId: json['userId'],
-      name: json['name'],
-      room: json['room'],
-      phone: json['phone'],
-      email: json['email'],
-    );
-  }
-}
-
-class Complaint {
-  final String id;
-  final String userId;
-  final String subject;
-  final String description;
-
-  Complaint(
-      {required this.id,
-      required this.userId,
-      required this.subject,
-      required this.description});
-
-  factory Complaint.fromJson(Map<String, dynamic> json) {
-    return Complaint(
-      id: json['id'].toString(),
-      userId: json['userId'],
-      subject: json['subject'],
-      description: json['description'],
-    );
-  }
-}
+import 'package:student_dorm_frontend/models.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -91,6 +42,17 @@ class _AdminPageState extends State<AdminPage> {
     }
   }
 
+  Future<List<Booking>> fetchBookings() async {
+    final response = await http.get(Uri.http(getBackendUrl(), '/api/bookings'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> bookingsJson = json.decode(response.body);
+      return bookingsJson.map((json) => Booking.fromJson(json)).toList();
+    } else {
+      throw Exception('Nu am reușit să aduc rezervările din server.');
+    }
+  }
+
   Future<void> _navigateTo(String routeName) async {
     Navigator.pushReplacementNamed(context, routeName);
   }
@@ -111,7 +73,7 @@ class _AdminPageState extends State<AdminPage> {
         ],
       ),
       drawer: _buildDrawer(),
-      body: _selectedIndex == 0 ? _buildUsersList() : _buildComplaintsList(),
+      body: _buildSelectedPage(),
     );
   }
 
@@ -143,9 +105,29 @@ class _AdminPageState extends State<AdminPage> {
               Navigator.pop(context);
             },
           ),
+          ListTile(
+            title: const Text('Rezervări'),
+            onTap: () {
+              setState(() => _selectedIndex = 2);
+              Navigator.pop(context);
+            },
+          ),
         ],
       ),
     );
+  }
+
+  Widget _buildSelectedPage() {
+    switch (_selectedIndex) {
+      case 0:
+        return _buildUsersList();
+      case 1:
+        return _buildComplaintsList();
+      case 2:
+        return _buildBookingsList();
+      default:
+        return _buildUsersList();
+    }
   }
 
   Widget _buildUsersList() {
@@ -203,4 +185,33 @@ class _AdminPageState extends State<AdminPage> {
       },
     );
   }
+
+  Widget _buildBookingsList() {
+    return FutureBuilder<List<Booking>>(
+      future: fetchBookings(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text("Error: ${snapshot.error}"));
+        } else {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              Booking booking = snapshot.data![index];
+              return Card(
+                margin: const EdgeInsets.all(10),
+                child: ListTile(
+                  leading: const Icon(Icons.book_online),
+                  title: Text('Mașina: ${booking.wmNo}'),
+                  subtitle: Text('Ora: ${booking.startHour}'),
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
 }
+
