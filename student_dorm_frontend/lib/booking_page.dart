@@ -252,6 +252,8 @@ class _BookingPageState extends State<BookingPage> {
               children: availableHours.map<Widget>((hour) {
                 String time = hour['time'];
                 bool reserved = hour['reserved'];
+                hour['userName'] = hour['userName'] ?? '';
+                hour['userPhone'] = hour['userPhone'] ?? '';
                 return GestureDetector(
                   onTap: reserved
                       ? () => _showReservationInfo(

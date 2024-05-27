@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                   foregroundColor: Colors.black,
                   backgroundColor: const Color(0xFFB6D0E2),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                   padding: const EdgeInsets.symmetric(
                       vertical: 20.0, horizontal: 15.0),
@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                 foregroundColor: Colors.black,
                 backgroundColor: const Color(0xFFB6D0E2),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 padding: const EdgeInsets.symmetric(
                     vertical: 20.0, horizontal: 15.0),
@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                 foregroundColor: Colors.black,
                 backgroundColor: const Color(0xFFB6D0E2),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 padding: const EdgeInsets.symmetric(
                     vertical: 20.0, horizontal: 15.0),
@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                 foregroundColor: Colors.black,
                 backgroundColor: const Color(0xFFB6D0E2),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 padding: const EdgeInsets.symmetric(
                     vertical: 20.0, horizontal: 15.0),
@@ -165,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                 foregroundColor: Colors.black,
                 backgroundColor: const Color(0xFFB6D0E2),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 padding: const EdgeInsets.symmetric(
                     vertical: 20.0, horizontal: 15.0),
@@ -185,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                 foregroundColor: Colors.black,
                 backgroundColor: const Color(0xFFB6D0E2),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 padding: const EdgeInsets.symmetric(
                     vertical: 20.0, horizontal: 15.0),

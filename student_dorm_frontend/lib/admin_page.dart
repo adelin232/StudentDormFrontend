@@ -208,6 +208,13 @@ class _AdminPageState extends State<AdminPage> {
                   leading: const Icon(Icons.report_problem),
                   title: Text(complaint.subject),
                   subtitle: Text(complaint.description),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () async {
+                      await deleteComplaint(complaint.id);
+                      setState(() {});
+                    },
+                  ),
                 ),
               );
             },
@@ -369,6 +376,19 @@ class _AdminPageState extends State<AdminPage> {
     } else {
       throw Exception(
           'Nu am reușit să șterg rezervarea. Status code: ${response.statusCode}');
+    }
+  }
+
+  Future<void> deleteComplaint(String id) async {
+    final response = await http.delete(
+      Uri.http(getBackendUrl(), '/api/complaints/$id'),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return;
+    } else {
+      throw Exception(
+          'Nu am reușit să șterg plângerea. Status code: ${response.statusCode}');
     }
   }
 
