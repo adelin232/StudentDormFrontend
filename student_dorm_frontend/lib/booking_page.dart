@@ -12,6 +12,7 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
+  final _formKey = GlobalKey<FormState>();
   final _wmNoController = TextEditingController();
   String selectedMachine = '1';
   List<String> machines = ['1', '2', '3'];
@@ -44,6 +45,11 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   Future<void> _book() async {
+    if (selectedHour.isEmpty) {
+      showErrorSnackBar('Vă rugăm să selectați o oră pentru rezervare.');
+      return;
+    }
+
     final numarMasina =
         (_wmNoController.text.trim() == '') ? '1' : _wmNoController.text.trim();
     final oraIncepere = selectedHour;
@@ -68,7 +74,6 @@ class _BookingPageState extends State<BookingPage> {
     if (response.statusCode == 200) {
       _navigateTo('/home');
     } else {
-      // showErrorSnackBar('Eroare la rezervare: ${response.body}');
       showErrorSnackBar('Eroare: Aveți deja o rezervare la această mașină.');
     }
   }
@@ -91,69 +96,73 @@ class _BookingPageState extends State<BookingPage> {
     double widthFactor =
         screenSize.width > 800 ? 0.5 : (screenSize.width > 600 ? 0.75 : 0.95);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0FFFF),
-      appBar: AppBar(
-        title: const Text('Rezervări pentru mașinile de spălat'),
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Rezervă o mașină de spălat',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20.0),
-                  FractionallySizedBox(
-                    widthFactor: widthFactor,
-                    child: buildDropdownButton(),
-                  ),
-                  const SizedBox(height: 20.0),
-                  buildAvailableHours(),
-                  const SizedBox(height: 20.0),
-                  FractionallySizedBox(
-                    widthFactor: widthFactor,
-                    child: ElevatedButton(
-                      onPressed: _book,
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: const Color(0xFFB6D0E2),
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedHour = '';
+        });
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF0FFFF),
+        appBar: AppBar(
+          title: const Text('Rezervări de mașini de spălat'),
+          automaticallyImplyLeading: false,
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.home),
+              onPressed: () {
+                _navigateTo('/home');
+              },
+              tooltip: 'Homepage',
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Rezervă o mașină de spălat',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      child: const Text(
-                        'Rezervă mașina',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      const SizedBox(height: 20.0),
+                      FractionallySizedBox(
+                        widthFactor: widthFactor,
+                        child: buildDropdownButton(),
                       ),
-                    ),
+                      const SizedBox(height: 20.0),
+                      buildAvailableHours(),
+                      const SizedBox(height: 20.0),
+                      FractionallySizedBox(
+                        widthFactor: widthFactor,
+                        child: ElevatedButton(
+                          onPressed: _book,
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.black,
+                            backgroundColor: const Color(0xFFB6D0E2),
+                            padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          ),
+                          child: const Text(
+                            'Rezervă mașina',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 20.0),
-                  FractionallySizedBox(
-                    widthFactor: widthFactor,
-                    child: ElevatedButton(
-                      onPressed: () => _navigateTo('/home'),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: const Color(0xFFB6D0E2),
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      ),
-                      child: const Text(
-                        'Înapoi la Home Page',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -269,36 +278,6 @@ class _BookingPageState extends State<BookingPage> {
                     ),
                   ),
                 );
-                // return Tooltip(
-                //   message: tooltipMessage,
-                //   child: ElevatedButton(
-                //     onPressed: reserved
-                //         ? null
-                //         : () {
-                //             setState(() {
-                //               selectedHour = time;
-                //             });
-                //           },
-                //     style: ElevatedButton.styleFrom(
-                //       foregroundColor: Colors.white,
-                //       backgroundColor: reserved
-                //           ? Colors.red
-                //           : (selectedHour == time ? Colors.blue : Colors.green),
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(10.0),
-                //       ),
-                //       padding: const EdgeInsets.symmetric(
-                //           vertical: 10.0, horizontal: 15.0),
-                //     ),
-                //     child: Text(
-                //       time,
-                //       style: const TextStyle(
-                //         fontSize: 14.0,
-                //         fontWeight: FontWeight.bold,
-                //       ),
-                //     ),
-                //   ),
-                // );
               }).toList(),
             ),
           ],

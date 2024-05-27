@@ -67,6 +67,16 @@ class _ComplaintPageState extends State<ComplaintPage> {
       backgroundColor: const Color(0xFFF0FFFF),
       appBar: AppBar(
         title: const Text('Trimitere plângere'),
+        automaticallyImplyLeading: false,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              _navigateTo('/home');
+            },
+            tooltip: 'Homepage',
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -105,22 +115,6 @@ class _ComplaintPageState extends State<ComplaintPage> {
                         ),
                         child: const Text(
                           'Trimite',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    FractionallySizedBox(
-                      widthFactor: widthFactor,
-                      child: ElevatedButton(
-                        onPressed: () => _navigateTo('/home'),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black,
-                          backgroundColor: const Color(0xFFB6D0E2),
-                          padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        ),
-                        child: const Text(
-                          'Înapoi la Home Page',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),

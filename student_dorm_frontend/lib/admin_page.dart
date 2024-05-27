@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:student_dorm_frontend/utils.dart';
 import 'package:student_dorm_frontend/models.dart';
@@ -20,8 +21,7 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   Future<List<User>> fetchUsers() async {
-    final response =
-        await http.get(Uri.http(getBackendUrl(), '/api/students'));
+    final response = await http.get(Uri.http(getBackendUrl(), '/api/students'));
 
     if (response.statusCode == 200) {
       List<dynamic> usersJson = json.decode(response.body);
@@ -32,7 +32,8 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   Future<List<Complaint>> fetchComplaints() async {
-    final response = await http.get(Uri.http(getBackendUrl(), '/api/complaints'));
+    final response =
+        await http.get(Uri.http(getBackendUrl(), '/api/complaints'));
 
     if (response.statusCode == 200) {
       List<dynamic> complaintsJson = json.decode(response.body);
@@ -53,6 +54,20 @@ class _AdminPageState extends State<AdminPage> {
     }
   }
 
+  Future<List<Announcement>> fetchAnnouncements() async {
+    final response =
+        await http.get(Uri.http(getBackendUrl(), '/api/announcements'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> announcementsJson = json.decode(response.body);
+      return announcementsJson
+          .map((json) => Announcement.fromJson(json))
+          .toList();
+    } else {
+      throw Exception('Nu am reușit să aduc anunțurile din server.');
+    }
+  }
+
   Future<void> _navigateTo(String routeName) async {
     Navigator.pushReplacementNamed(context, routeName);
   }
@@ -61,19 +76,26 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pagina de administrator'),
+        title: const Text('Administrator'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.home),
             onPressed: () {
               _navigateTo('/home');
             },
-            tooltip: 'Home Page',
+            tooltip: 'Homepage',
           ),
         ],
       ),
       drawer: _buildDrawer(),
       body: _buildSelectedPage(),
+      floatingActionButton: _selectedIndex == 3
+          ? FloatingActionButton(
+              onPressed: () => _showAnnouncementDialog(),
+              tooltip: 'Adaugă anunț',
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
@@ -87,7 +109,7 @@ class _AdminPageState extends State<AdminPage> {
               color: Colors.blue,
             ),
             child: Text(
-              'Meniu Admin',
+              'Meniu',
               style: TextStyle(color: Colors.white, fontSize: 24),
             ),
           ),
@@ -112,6 +134,13 @@ class _AdminPageState extends State<AdminPage> {
               Navigator.pop(context);
             },
           ),
+          ListTile(
+            title: const Text('Anunțuri'),
+            onTap: () {
+              setState(() => _selectedIndex = 3);
+              Navigator.pop(context);
+            },
+          ),
         ],
       ),
     );
@@ -125,6 +154,8 @@ class _AdminPageState extends State<AdminPage> {
         return _buildComplaintsList();
       case 2:
         return _buildBookingsList();
+      case 3:
+        return _buildAnnouncementsList();
       default:
         return _buildUsersList();
     }
@@ -205,6 +236,13 @@ class _AdminPageState extends State<AdminPage> {
                   leading: const Icon(Icons.book_online),
                   title: Text('Mașina: ${booking.wmNo}'),
                   subtitle: Text('Ora: ${booking.startHour}'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () async {
+                      await deleteBooking(booking.id);
+                      setState(() {});
+                    },
+                  ),
                 ),
               );
             },
@@ -213,5 +251,188 @@ class _AdminPageState extends State<AdminPage> {
       },
     );
   }
-}
 
+  void _showAnnouncementDialog([Announcement? announcement]) {
+    final titleController = TextEditingController(
+      text: announcement?.title ?? '',
+    );
+    final descriptionController = TextEditingController(
+      text: announcement?.description ?? '',
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(announcement == null ? 'Adaugă anunț' : 'Editează anunț'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(labelText: 'Titlu'),
+              ),
+              TextField(
+                controller: descriptionController,
+                decoration: const InputDecoration(labelText: 'Descriere'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Anulează'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final now = DateTime.now();
+                final formattedDate =
+                    DateFormat('yyyy-MM-ddTHH:mm:ss').format(now);
+
+                final newAnnouncement = Announcement(
+                  id: announcement?.id ?? '',
+                  title: titleController.text,
+                  description: descriptionController.text,
+                  date: announcement?.date ?? formattedDate,
+                );
+
+                if (announcement == null) {
+                  await createAnnouncement(newAnnouncement);
+                } else {
+                  await updateAnnouncement(newAnnouncement);
+                }
+
+                setState(() {});
+                // ignore: use_build_context_synchronously
+                Navigator.pop(context);
+              },
+              child: const Text('Salvează'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> createAnnouncement(Announcement announcement) async {
+    final response = await http.post(
+      Uri.http(getBackendUrl(), '/api/announcements'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        'title': announcement.title,
+        'description': announcement.description,
+        'date': announcement.date,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Nu am reușit să creez anunțul.');
+    }
+  }
+
+  Future<void> updateAnnouncement(Announcement announcement) async {
+    final response = await http.put(
+      Uri.http(getBackendUrl(), '/api/announcements/${announcement.id}'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        'title': announcement.title,
+        'description': announcement.description,
+        'date': announcement.date,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Nu am reușit să actualizez anunțul.');
+    }
+  }
+
+  Future<void> deleteAnnouncement(String id) async {
+    final response = await http.delete(
+      Uri.http(getBackendUrl(), '/api/announcements/$id'),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return;
+    } else {
+      throw Exception(
+          'Nu am reușit să șterg anunțul. Status code: ${response.statusCode}');
+    }
+  }
+
+  Future<void> deleteBooking(String id) async {
+    final response = await http.delete(
+      Uri.http(getBackendUrl(), '/api/bookings/$id'),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return;
+    } else {
+      throw Exception(
+          'Nu am reușit să șterg rezervarea. Status code: ${response.statusCode}');
+    }
+  }
+
+  Widget _buildAnnouncementsList() {
+    return FutureBuilder<List<Announcement>>(
+      future: fetchAnnouncements(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text("Error: ${snapshot.error}"));
+        } else {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              Announcement announcement = snapshot.data![index];
+              DateTime date = DateTime.parse(announcement.date);
+              String formattedDate =
+                  DateFormat('dd/MM/yyyy, HH:mm').format(date);
+
+              return Card(
+                margin: const EdgeInsets.all(10),
+                child: ListTile(
+                  leading: const Icon(Icons.announcement),
+                  title: Text(announcement.title),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(announcement.description),
+                      const SizedBox(height: 4),
+                      Text(formattedDate),
+                    ],
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () => _showAnnouncementDialog(announcement),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () async {
+                          await deleteAnnouncement(announcement.id);
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  void showErrorSnackBar(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.red,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+}

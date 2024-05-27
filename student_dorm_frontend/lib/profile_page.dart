@@ -29,7 +29,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final response = await http.get(
-        Uri.http(getBackendUrl(), '/api/students/profile', {'userId': user.uid}),
+        Uri.http(
+            getBackendUrl(), '/api/students/profile', {'userId': user.uid}),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer ${await user.getIdToken()}",
@@ -89,7 +90,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -102,6 +104,16 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: const Color(0xFFF0FFFF),
       appBar: AppBar(
         title: const Text('Profil student'),
+        automaticallyImplyLeading: false,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              _navigateTo('/home');
+            },
+            tooltip: 'Homepage',
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -143,30 +155,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.black,
                                 backgroundColor: const Color(0xFFB6D0E2),
-                                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15.0),
                               ),
                               child: const Text(
                                 'Salvează profil',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20.0),
-                          FractionallySizedBox(
-                            widthFactor: widthFactor,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  _navigateTo('/home');
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.black,
-                                backgroundColor: const Color(0xFFB6D0E2),
-                                padding: const EdgeInsets.symmetric(vertical: 15.0),
-                              ),
-                              child: const Text(
-                                'Înapoi la Home Page',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
@@ -188,7 +181,8 @@ class _ProfilePageState extends State<ProfilePage> {
         controller: controller,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          labelStyle:
+              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           border: const OutlineInputBorder(),
         ),
         validator: (value) {

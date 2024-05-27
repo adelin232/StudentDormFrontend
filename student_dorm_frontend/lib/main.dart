@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
+import 'package:student_dorm_frontend/feed_page.dart';
 import 'package:student_dorm_frontend/utils.dart';
 // import 'chat_page.dart';
 // import 'dart:convert';
@@ -65,7 +66,8 @@ class AdminPageProtection extends StatelessWidget {
     final userId = user.uid;
     // final uri = Uri.parse('${getBackendUrl()}/admin/check-admin')
     //     .replace(queryParameters: {'userId': userId});
-    final uri = Uri.http(getBackendUrl(), '/admin/check-admin', {'userId': userId});
+    final uri =
+        Uri.http(getBackendUrl(), '/admin/check-admin', {'userId': userId});
     final response = await http.get(
       uri,
       headers: {
@@ -135,6 +137,7 @@ class _MyAppState extends State<MyApp> {
                 child: AdminPage(),
               )),
           // '/chat': (_) => const ChatPage(),
+          '/feed': (context) => const AuthGuard(protectedPage: FeedPage()),
         },
         initialRoute: '/login',
         home: const LoginPage());

@@ -62,8 +62,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: const Text('Homepage'),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(
@@ -98,6 +98,26 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => _navigateTo('/feed'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: const Color(0xFFB6D0E2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 20.0, horizontal: 15.0),
+              ),
+              child: const Text(
+                'Feed anunțuri',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _navigateTo('/profile'),
