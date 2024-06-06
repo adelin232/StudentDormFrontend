@@ -86,18 +86,46 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
       ),
       body: user == null
           ? const Center(
-              child: Text('Trebuie să fii logat pentru a vedea rezervările.'))
+              child: Text(
+                'Trebuie să fii logat pentru a vedea rezervările.',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            )
           : myBookings.isEmpty
-              ? const Center(child: Text('Nu există rezervări.'))
+              ? const Center(
+                  child: Text(
+                    'Nu există rezervări.',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                )
               : ListView.builder(
+                  padding: const EdgeInsets.all(10.0),
                   itemCount: myBookings.length,
                   itemBuilder: (context, index) {
                     var booking = myBookings[index];
                     String wmNo = booking['wmNo'] ?? 'N/A';
                     String startHour = booking['startHour'] ?? 'N/A';
-                    return ListTile(
-                      title: Text('Mașină: $wmNo'),
-                      subtitle: Text('Ora începerii: $startHour'),
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 10.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      elevation: 5,
+                      child: ListTile(
+                        leading: const Icon(Icons.local_laundry_service,
+                            size: 40, color: Color(0xFF0077B6)),
+                        title: Text(
+                          'Mașină: $wmNo',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'Ora începerii: $startHour',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
                     );
                   },
                 ),
