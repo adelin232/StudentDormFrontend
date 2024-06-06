@@ -153,48 +153,40 @@ class _SignUpPageState extends State<SignUpPage> {
                           buildTextField(_roomController, FocusNode(), 'Cameră',
                               AutofillHints.addressCity),
                           const SizedBox(height: 20.0),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 120.0, right: 120.0),
-                            child: ElevatedButton(
-                              onPressed: _signUp,
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: const Color(0xFF0077B6),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15.0),
+                          ElevatedButton(
+                            onPressed: _signUp,
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: const Color(0xFF0077B6),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
-                              child: const Text(
-                                'Înregistrare',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                            ),
+                            child: const Text(
+                              'Înregistrare',
+                              style: TextStyle(
+                                fontSize: 16.0,
                               ),
                             ),
                           ),
                           const SizedBox(height: 20.0),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 120.0, right: 120.0),
-                            child: ElevatedButton(
-                              onPressed: () => _navigateTo('/login'),
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: const Color(0xFF0077B6),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15.0),
+                          ElevatedButton(
+                            onPressed: () => _navigateTo('/login'),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: const Color(0xFF0077B6),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
-                              child: const Text(
-                                'Aveți deja un cont? Conectați-vă',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                            ),
+                            child: const Text(
+                              'Aveți deja un cont? Conectați-vă',
+                              style: TextStyle(
+                                fontSize: 16.0,
                               ),
                             ),
                           ),
