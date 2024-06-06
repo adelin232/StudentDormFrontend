@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(top: 24.0),
+            padding: const EdgeInsets.only(top: 16.0),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     if (_isAdmin)
                       buildCard(
                         icon: Icons.admin_panel_settings,
