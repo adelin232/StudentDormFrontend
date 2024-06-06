@@ -70,16 +70,48 @@ class _FeedPageState extends State<FeedPage> {
                   DateFormat('dd/MM/yyyy, HH:mm').format(date);
 
               return Card(
-                margin: const EdgeInsets.all(10),
-                child: ListTile(
-                  leading: const Icon(Icons.announcement),
-                  title: Text(announcement.title),
-                  subtitle: Column(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(announcement.description),
-                      const SizedBox(height: 4),
-                      Text(formattedDate),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.announcement,
+                            color: Color(0xFF0077B6),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              announcement.title,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        announcement.description,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        formattedDate,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
                     ],
                   ),
                 ),

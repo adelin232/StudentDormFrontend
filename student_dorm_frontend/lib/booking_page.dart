@@ -85,6 +85,7 @@ class _BookingPageState extends State<BookingPage> {
   void showErrorSnackBar(String message) {
     final snackBar = SnackBar(
       content: Text(message),
+      backgroundColor: Colors.red,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -148,14 +149,15 @@ class _BookingPageState extends State<BookingPage> {
                       const SizedBox(height: 20.0),
                       FractionallySizedBox(
                         widthFactor: widthFactor,
-                        child: ElevatedButton(
+                        child: ElevatedButton.icon(
                           onPressed: _book,
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.black,
                             backgroundColor: const Color(0xFFB6D0E2),
                             padding: const EdgeInsets.symmetric(vertical: 15.0),
                           ),
-                          child: const Text(
+                          icon: const Icon(Icons.check),
+                          label: const Text(
                             'Rezervă mașina',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -219,6 +221,9 @@ class _BookingPageState extends State<BookingPage> {
   Widget buildAvailableHours() {
     return Card(
       elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

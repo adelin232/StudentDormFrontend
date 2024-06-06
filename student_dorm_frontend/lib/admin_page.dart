@@ -48,7 +48,17 @@ class _AdminPageState extends State<AdminPage> {
 
     if (response.statusCode == 200) {
       List<dynamic> bookingsJson = json.decode(response.body);
-      return bookingsJson.map((json) => Booking.fromJson(json)).toList();
+      List<Booking> bookings =
+          bookingsJson.map((json) => Booking.fromJson(json)).toList();
+
+      // Sort bookings by wmNo and startHour
+      bookings.sort((a, b) {
+        int wmNoComparison = a.wmNo.compareTo(b.wmNo);
+        if (wmNoComparison != 0) return wmNoComparison;
+        return a.startHour.compareTo(b.startHour);
+      });
+
+      return bookings;
     } else {
       throw Exception('Nu am reușit să aduc rezervările din server.');
     }
@@ -94,6 +104,7 @@ class _AdminPageState extends State<AdminPage> {
           ? FloatingActionButton(
               onPressed: () => _showAnnouncementDialog(),
               tooltip: 'Adaugă anunț',
+              backgroundColor: const Color(0xFF0077B6),
               child: const Icon(Icons.add),
             )
           : null,
@@ -107,7 +118,7 @@ class _AdminPageState extends State<AdminPage> {
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Color(0xFF0077B6),
             ),
             child: Text(
               'Meniu',
@@ -115,6 +126,7 @@ class _AdminPageState extends State<AdminPage> {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.person),
             title: const Text('Studenți'),
             onTap: () {
               setState(() => _selectedIndex = 0);
@@ -122,6 +134,7 @@ class _AdminPageState extends State<AdminPage> {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.report_problem),
             title: const Text('Plângeri'),
             onTap: () {
               setState(() => _selectedIndex = 1);
@@ -129,6 +142,7 @@ class _AdminPageState extends State<AdminPage> {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.book_online),
             title: const Text('Rezervări'),
             onTap: () {
               setState(() => _selectedIndex = 2);
@@ -136,6 +150,7 @@ class _AdminPageState extends State<AdminPage> {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.announcement),
             title: const Text('Anunțuri'),
             onTap: () {
               setState(() => _selectedIndex = 3);
@@ -177,6 +192,9 @@ class _AdminPageState extends State<AdminPage> {
               User user = snapshot.data![index];
               return Card(
                 margin: const EdgeInsets.all(10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
                 child: ListTile(
                   leading: const Icon(Icons.person),
                   title: Text(user.name),
@@ -205,6 +223,9 @@ class _AdminPageState extends State<AdminPage> {
               Complaint complaint = snapshot.data![index];
               return Card(
                 margin: const EdgeInsets.all(10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
                 child: ListTile(
                   leading: const Icon(Icons.report_problem),
                   title: Text(complaint.subject),
@@ -234,27 +255,49 @@ class _AdminPageState extends State<AdminPage> {
         } else if (snapshot.hasError) {
           return Center(child: Text("Error: ${snapshot.error}"));
         } else {
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              Booking booking = snapshot.data![index];
-              return Card(
-                margin: const EdgeInsets.all(10),
-                child: ListTile(
-                  leading: const Icon(Icons.book_online),
-                  title: Text('Mașina: ${booking.wmNo}'),
-                  subtitle: Text('Ora: ${booking.startHour}'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () async {
-                      await deleteBooking(booking.id);
-                      setState(() {});
-                    },
+          if (snapshot.hasData) {
+            var bookings = snapshot.data!;
+            var bookingsByMachine = <String, List<Booking>>{};
+
+            for (var booking in bookings) {
+              if (!bookingsByMachine.containsKey(booking.wmNo)) {
+                bookingsByMachine[booking.wmNo] = [];
+              }
+              bookingsByMachine[booking.wmNo]!.add(booking);
+            }
+
+            return ListView(
+              children: bookingsByMachine.entries.map((entry) {
+                var machineNumber = entry.key;
+                var machineBookings = entry.value;
+
+                return Card(
+                  margin: const EdgeInsets.all(10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
                   ),
-                ),
-              );
-            },
-          );
+                  child: ExpansionTile(
+                    leading: const Icon(Icons.book_online),
+                    title: Text('Mașina: $machineNumber'),
+                    children: machineBookings.map((booking) {
+                      return ListTile(
+                        title: Text('Ora: ${booking.startHour}'),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () async {
+                            await deleteBooking(booking.id);
+                            setState(() {});
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                );
+              }).toList(),
+            );
+          } else {
+            return const Center(child: Text('Nu există rezervări.'));
+          }
         }
       },
     );
@@ -412,6 +455,9 @@ class _AdminPageState extends State<AdminPage> {
 
               return Card(
                 margin: const EdgeInsets.all(10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
                 child: ListTile(
                   leading: const Icon(Icons.announcement),
                   title: Text(announcement.title),

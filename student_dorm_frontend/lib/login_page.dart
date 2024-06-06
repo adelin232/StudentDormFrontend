@@ -121,40 +121,48 @@ class _LoginPageState extends State<LoginPage> {
                               AutofillHints.password,
                               obscureText: true),
                           const SizedBox(height: 20.0),
-                          ElevatedButton(
-                            onPressed: _login,
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.black,
-                              backgroundColor: const Color(0xFFB6D0E2),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 120.0, right: 120.0),
+                            child: ElevatedButton(
+                              onPressed: _login,
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor: const Color(0xFF0077B6),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15.0),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 15.0),
-                            ),
-                            child: const Text(
-                              'Conectare',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
+                              child: const Text(
+                                'Conectare',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
                               ),
                             ),
                           ),
                           const SizedBox(height: 20.0),
-                          ElevatedButton(
-                            onPressed: _signup,
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.black,
-                              backgroundColor: const Color(0xFFB6D0E2),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 120.0, right: 120.0),
+                            child: ElevatedButton(
+                              onPressed: _signup,
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor: const Color(0xFF0077B6),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15.0),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 15.0),
-                            ),
-                            child: const Text(
-                              'Nu aveți un cont? Înregistrați-vă',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
+                              child: const Text(
+                                'Nu aveți un cont? Înregistrați-vă',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
                               ),
                             ),
                           ),

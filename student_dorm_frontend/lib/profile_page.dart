@@ -156,6 +156,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.black,
                                 backgroundColor: const Color(0xFFB6D0E2),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 15.0),
                               ),
@@ -176,23 +179,45 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget buildTextField(TextEditingController controller, String label) {
-    return FractionallySizedBox(
-      widthFactor: 0.8,
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle:
-              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          border: const OutlineInputBorder(),
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            icon: Icon(_getIconForField(label)),
+            labelText: label,
+            labelStyle: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+            border: InputBorder.none,
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Vă rugăm să introduceți $label';
+            }
+            return null;
+          },
         ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Vă rugăm să introduceți $label';
-          }
-          return null;
-        },
       ),
     );
+  }
+
+  IconData _getIconForField(String label) {
+    switch (label) {
+      case 'Nume':
+        return Icons.person;
+      case 'Cameră':
+        return Icons.meeting_room;
+      case 'Telefon':
+        return Icons.phone;
+      default:
+        return Icons.text_fields;
+    }
   }
 }

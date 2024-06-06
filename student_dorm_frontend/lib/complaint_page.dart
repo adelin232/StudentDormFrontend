@@ -52,6 +52,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
   void showErrorSnackBar(String message) {
     final snackBar = SnackBar(
       content: Text(message),
+      backgroundColor: Colors.red,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -112,11 +113,16 @@ class _ComplaintPageState extends State<ComplaintPage> {
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
                           backgroundColor: const Color(0xFFB6D0E2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
                           padding: const EdgeInsets.symmetric(vertical: 15.0),
                         ),
                         child: const Text(
                           'Trimite',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -140,7 +146,11 @@ class _ComplaintPageState extends State<ComplaintPage> {
           labelText: label,
           labelStyle:
               const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          border: const OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          filled: true,
+          fillColor: Colors.white,
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {

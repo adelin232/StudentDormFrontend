@@ -66,140 +66,108 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: const Color(0xFF0077B6),
         automaticallyImplyLeading: false,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Bun venit pe StudentDormSystem!',
-              style: TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
+      body: Container(
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF0077B6), Color(0xFF00B4D8)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 40.0),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      'Bun venit pe StudentDormSystem!',
+                      style: TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    if (_isAdmin)
+                      buildCard(
+                        icon: Icons.admin_panel_settings,
+                        text: 'Pagina de administrare',
+                        onTap: () => _navigateTo('/admin'),
+                      ),
+                    const SizedBox(height: 20),
+                    buildCard(
+                      icon: Icons.announcement,
+                      text: 'Feed anunțuri',
+                      onTap: () => _navigateTo('/feed'),
+                    ),
+                    const SizedBox(height: 20),
+                    buildCard(
+                      icon: Icons.person,
+                      text: 'Modifică profilul',
+                      onTap: () => _navigateTo('/profile'),
+                    ),
+                    const SizedBox(height: 20),
+                    buildCard(
+                      icon: Icons.local_laundry_service,
+                      text: 'Rezervă o mașină de spălat',
+                      onTap: () => _navigateTo('/booking'),
+                    ),
+                    const SizedBox(height: 20),
+                    buildCard(
+                      icon: Icons.report_problem,
+                      text: 'Realizează o plângere',
+                      onTap: () => _navigateTo('/complaint'),
+                    ),
+                    const SizedBox(height: 20),
+                    buildCard(
+                      icon: Icons.logout,
+                      text: 'Logout',
+                      onTap: () => _logout(context),
+                    ),
+                  ],
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
-            if (_isAdmin)
-              ElevatedButton(
-                onPressed: () => _navigateTo('/admin'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: const Color(0xFFB6D0E2),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 20.0, horizontal: 15.0),
-                ),
-                child: const Text(
-                  'Pagina de administrare',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _navigateTo('/feed'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: const Color(0xFFB6D0E2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 20.0, horizontal: 15.0),
-              ),
-              child: const Text(
-                'Feed anunțuri',
-                style: TextStyle(
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCard(
+      {required IconData icon,
+      required String text,
+      required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 30, color: const Color(0xFF0077B6)),
+              const SizedBox(width: 10),
+              Text(
+                text,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _navigateTo('/profile'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: const Color(0xFFB6D0E2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 20.0, horizontal: 15.0),
-              ),
-              child: const Text(
-                'Modifică profilul',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _navigateTo('/booking'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: const Color(0xFFB6D0E2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 20.0, horizontal: 15.0),
-              ),
-              child: const Text(
-                'Rezervă o mașină de spălat',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _navigateTo('/complaint'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: const Color(0xFFB6D0E2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 20.0, horizontal: 15.0),
-              ),
-              child: const Text(
-                'Realizează o plângere',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _logout(context),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: const Color(0xFFB6D0E2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 20.0, horizontal: 15.0),
-              ),
-              child: const Text(
-                'Logout',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
