@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                     const Text(
                       'Bun venit pe StudentDormSystem!',
                       style: TextStyle(
-                        fontSize: 36,
+                        fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
