@@ -100,30 +100,40 @@ class _HomePageState extends State<HomePage> {
                         text: 'Pagina de administrare',
                         onTap: () => _navigateTo('/admin'),
                       ),
-                    const SizedBox(height: 20),
-                    buildCard(
-                      icon: Icons.announcement,
-                      text: 'Feed anunțuri',
-                      onTap: () => _navigateTo('/feed'),
-                    ),
+                    if (!_isAdmin) const SizedBox(height: 20),
+                    if (!_isAdmin)
+                      buildCard(
+                        icon: Icons.announcement,
+                        text: 'Feed anunțuri',
+                        onTap: () => _navigateTo('/feed'),
+                      ),
                     const SizedBox(height: 20),
                     buildCard(
                       icon: Icons.person,
                       text: 'Modifică profilul',
                       onTap: () => _navigateTo('/profile'),
                     ),
-                    const SizedBox(height: 20),
-                    buildCard(
-                      icon: Icons.local_laundry_service,
-                      text: 'Rezervă o mașină de spălat',
-                      onTap: () => _navigateTo('/booking'),
-                    ),
-                    const SizedBox(height: 20),
-                    buildCard(
-                      icon: Icons.report_problem,
-                      text: 'Realizează o plângere',
-                      onTap: () => _navigateTo('/complaint'),
-                    ),
+                    if (!_isAdmin) const SizedBox(height: 20),
+                    if (!_isAdmin)
+                      buildCard(
+                        icon: Icons.local_laundry_service,
+                        text: 'Rezervă o mașină de spălat',
+                        onTap: () => _navigateTo('/booking'),
+                      ),
+                    if (!_isAdmin) const SizedBox(height: 20),
+                    if (!_isAdmin)
+                      buildCard(
+                        icon: Icons.list,
+                        text: 'Rezervările mele',
+                        onTap: () => _navigateTo('/mybookings'),
+                      ),
+                    if (!_isAdmin) const SizedBox(height: 20),
+                    if (!_isAdmin)
+                      buildCard(
+                        icon: Icons.report_problem,
+                        text: 'Realizează o plângere',
+                        onTap: () => _navigateTo('/complaint'),
+                      ),
                     const SizedBox(height: 20),
                     buildCard(
                       icon: Icons.logout,

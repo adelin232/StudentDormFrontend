@@ -38,7 +38,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
       return;
     }
 
-    final url = Uri.http(getBackendUrl(), '/api/bookings', {'userId': user.uid});
+    final url = Uri.http(getBackendUrl(), '/api/bookings/${user.uid}');
 
     try {
       final response = await http.get(
@@ -62,11 +62,27 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
     }
   }
 
+  Future<void> _navigateTo(String routeName) async {
+    Navigator.pushReplacementNamed(context, routeName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF0FFFF),
       appBar: AppBar(
         title: const Text('Rezervările mele'),
+        backgroundColor: const Color(0xFF0077B6),
+        automaticallyImplyLeading: false,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              _navigateTo('/home');
+            },
+            tooltip: 'Homepage',
+          ),
+        ],
       ),
       body: user == null
           ? const Center(
