@@ -104,6 +104,7 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: const Color(0xFFF0FFFF),
       appBar: AppBar(
         title: const Text('Profil student'),
+        backgroundColor: const Color(0xFF0077B6),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(

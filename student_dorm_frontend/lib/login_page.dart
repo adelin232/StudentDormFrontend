@@ -71,10 +71,11 @@ class _LoginPageState extends State<LoginPage> {
     double widthFactor = screenSize.width > 600 ? 1.2 : 1;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF0FFFF),
+      backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: const Text('Conectare'),
+        backgroundColor: const Color(0xFF0077B6),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: ConstrainedBox(
@@ -92,8 +93,9 @@ class _LoginPageState extends State<LoginPage> {
                     child: Container(
                       padding: const EdgeInsets.all(20.0),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6495ED),
+                        color: const Color(0xFFF0FFFF),
                         borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(color: Colors.black, width: 1.0),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -36,6 +36,7 @@ class _FeedPageState extends State<FeedPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Feed anunțuri'),
+        backgroundColor: const Color(0xFF0077B6),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(

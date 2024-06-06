@@ -77,6 +77,7 @@ class _AdminPageState extends State<AdminPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Administrator'),
+        backgroundColor: const Color(0xFF0077B6),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.home),

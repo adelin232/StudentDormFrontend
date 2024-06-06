@@ -67,6 +67,7 @@ class _ComplaintPageState extends State<ComplaintPage> {
       backgroundColor: const Color(0xFFF0FFFF),
       appBar: AppBar(
         title: const Text('Trimitere plângere'),
+        backgroundColor: const Color(0xFF0077B6),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(

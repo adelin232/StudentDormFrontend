@@ -106,6 +106,7 @@ class _BookingPageState extends State<BookingPage> {
         backgroundColor: const Color(0xFFF0FFFF),
         appBar: AppBar(
           title: const Text('Rezervări de mașini de spălat'),
+          backgroundColor: const Color(0xFF0077B6),
           automaticallyImplyLeading: false,
           actions: <Widget>[
             IconButton(
