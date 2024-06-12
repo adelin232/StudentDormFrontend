@@ -100,8 +100,8 @@ class _HomePageState extends State<HomePage> {
                         text: 'Pagina de administrare',
                         onTap: () => _navigateTo('/admin'),
                       ),
-                    if (_isAdmin) const SizedBox(height: 20),
-                    if (_isAdmin)
+                    if (!_isAdmin) const SizedBox(height: 20),
+                    if (!_isAdmin)
                       buildCard(
                         icon: Icons.announcement,
                         text: 'Feed anunțuri',
@@ -113,22 +113,22 @@ class _HomePageState extends State<HomePage> {
                       text: 'Modifică profilul',
                       onTap: () => _navigateTo('/profile'),
                     ),
-                    if (_isAdmin) const SizedBox(height: 20),
-                    if (_isAdmin)
+                    if (!_isAdmin) const SizedBox(height: 20),
+                    if (!_isAdmin)
                       buildCard(
                         icon: Icons.local_laundry_service,
                         text: 'Rezervă o mașină de spălat',
                         onTap: () => _navigateTo('/booking'),
                       ),
-                    if (_isAdmin) const SizedBox(height: 20),
-                    if (_isAdmin)
+                    if (!_isAdmin) const SizedBox(height: 20),
+                    if (!_isAdmin)
                       buildCard(
                         icon: Icons.list,
                         text: 'Rezervările mele',
                         onTap: () => _navigateTo('/mybookings'),
                       ),
-                    if (_isAdmin) const SizedBox(height: 20),
-                    if (_isAdmin)
+                    if (!_isAdmin) const SizedBox(height: 20),
+                    if (!_isAdmin)
                       buildCard(
                         icon: Icons.report_problem,
                         text: 'Realizează o plângere',
