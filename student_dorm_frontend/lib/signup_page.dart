@@ -100,6 +100,7 @@ class _SignUpPageState extends State<SignUpPage> {
       backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: const Color(0xFF0077B6),
         title: const Text('Înregistrare'),
       ),
       body: Center(
