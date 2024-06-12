@@ -321,25 +321,31 @@ class _AdminPageState extends State<AdminPage> {
             children: [
               TextField(
                 controller: titleController,
-                decoration: const InputDecoration(labelText: 'Titlu'),
+                decoration: const InputDecoration(
+                    labelText: 'Titlu',
+                    labelStyle: TextStyle(color: Color(0xFF0077B6))),
               ),
               TextField(
                 controller: descriptionController,
-                decoration: const InputDecoration(labelText: 'Descriere'),
+                decoration: const InputDecoration(
+                    labelText: 'Descriere',
+                    labelStyle: TextStyle(color: Color(0xFF0077B6))),
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Anulează'),
+              child: const Text(
+                'Anulează',
+                style: TextStyle(color: Color(0xFF0077B6)),
+              ),
             ),
             ElevatedButton(
               onPressed: () async {
                 final now = DateTime.now();
                 final formattedDate =
                     DateFormat('yyyy-MM-ddTHH:mm:ss').format(now);
-
                 final newAnnouncement = Announcement(
                   id: announcement?.id ?? '',
                   title: titleController.text,
@@ -357,7 +363,14 @@ class _AdminPageState extends State<AdminPage> {
                 // ignore: use_build_context_synchronously
                 Navigator.pop(context);
               },
-              child: const Text('Salvează'),
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(const Color(0xFF0077B6)),
+              ),
+              child: const Text(
+                'Salvează',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
