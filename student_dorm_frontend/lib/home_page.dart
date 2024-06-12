@@ -100,8 +100,8 @@ class _HomePageState extends State<HomePage> {
                         text: 'Pagina de administrare',
                         onTap: () => _navigateTo('/admin'),
                       ),
-                    if (!_isAdmin) const SizedBox(height: 20),
-                    if (!_isAdmin)
+                    if (_isAdmin) const SizedBox(height: 20),
+                    if (_isAdmin)
                       buildCard(
                         icon: Icons.announcement,
                         text: 'Feed anunțuri',
