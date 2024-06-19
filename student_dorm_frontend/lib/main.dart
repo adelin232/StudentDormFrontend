@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:student_dorm_frontend/feed_page.dart';
+import 'package:student_dorm_frontend/firebase_options.dart';
 import 'package:student_dorm_frontend/utils.dart';
 // import 'chat_page.dart';
 // import 'dart:convert';
@@ -14,19 +16,21 @@ import 'booking_page.dart';
 import 'login_page.dart';
 import 'signup_page.dart';
 import 'home_page.dart';
-// import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     // options: DefaultFirebaseOptions.currentPlatform,
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyAD0ivs9-iSH13NyT4c7P-gaXBRjo24rMs',
-      appId: '1:20795749884:ios:a8c2eb3829463acd4bae79',
-      messagingSenderId: '20795749884',
-      projectId: 'studentdormplatform',
-      databaseURL: '',
-    ),
+    // options: const FirebaseOptions(
+    //   apiKey: 'AIzaSyAD0ivs9-iSH13NyT4c7P-gaXBRjo24rMs',
+    //   appId: '1:20795749884:ios:a8c2eb3829463acd4bae79',
+    //   messagingSenderId: '20795749884',
+    //   projectId: 'studentdormplatform',
+    //   databaseURL: '',
+    // ),
+    options: kIsWeb
+        ? DefaultFirebaseOptions.web
+        : DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
 }
